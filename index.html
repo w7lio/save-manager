@@ -6,86 +6,79 @@
 <title>Save Vault</title>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#241633;--panel:#33204a;--ink:#f4ead0;--dim:#a99bc2;--line:#0f0819;--cy:#4fe3d0;--pk:#ff5c8a;--yl:#ffd23f;color-scheme:dark}
+:root{--bg:#1b1226;--panel:#271a38;--deep:#150d1f;--ink:#f1e8d0;--dim:#9b8cb5;--line:#0e0816;--cy:#4fe3d0;--pk:#ff5c8a;--yl:#ffd23f;color-scheme:dark}
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--bg);color:var(--ink);font:22px/1.2 'VT323',ui-monospace,Consolas,monospace;padding:16px;min-height:100vh;
-background-image:linear-gradient(45deg,#2a1a3b 25%,transparent 25%,transparent 75%,#2a1a3b 75%),linear-gradient(45deg,#2a1a3b 25%,transparent 25%,transparent 75%,#2a1a3b 75%);background-size:16px 16px;background-position:0 0,8px 8px}
-h1,h2,.px{font-family:'Press Start 2P',ui-monospace,monospace;font-weight:400}
-h1{font-size:20px;margin:0;color:var(--yl);text-shadow:3px 3px 0 var(--pk)}
-h2{font-size:11px;margin:0 0 12px;color:var(--cy)}
-.wrap{max-width:1000px;margin:0 auto}
-.box{background:var(--panel);box-shadow:0 0 0 4px var(--line),0 0 0 8px var(--ink),8px 8px 0 8px var(--line);padding:16px;margin:12px 8px 20px}
-header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
-.stat{color:var(--dim);font-size:20px}
+body{background:var(--bg);color:var(--ink);font:22px/1.2 'VT323',ui-monospace,Consolas,monospace;padding:20px 14px 60px}
+.wrap{max-width:900px;margin:0 auto}
+header{display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;justify-content:space-between;margin-bottom:18px}
+h1{font:20px 'Press Start 2P',ui-monospace,monospace;margin:0;color:var(--yl);text-shadow:3px 3px 0 var(--line)}
+h2{font:12px 'Press Start 2P',ui-monospace,monospace;margin:0 0 14px;color:var(--cy)}
+nav button{background:none;box-shadow:none;color:var(--dim);margin:0 4px 0 0;padding:4px 10px}
+nav button.on{color:var(--ink);box-shadow:inset 0 -3px 0 var(--yl)}
+.box{background:var(--panel);box-shadow:0 0 0 3px var(--line),6px 6px 0 3px var(--line);padding:18px;display:grid;grid-template-columns:200px 1fr;gap:22px}
 button,.btn,input,textarea{font:inherit;color:inherit}
-button,.btn{background:var(--ink);color:var(--line);border:0;padding:6px 12px;cursor:pointer;box-shadow:0 4px 0 #8c7f63,0 0 0 3px var(--line);margin:3px 3px 7px 0;display:inline-block}
-button:hover,.btn:hover{background:#fff}
-button:active,.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #8c7f63,0 0 0 3px var(--line)}
-button.pk{background:var(--pk);box-shadow:0 4px 0 #a02a53,0 0 0 3px var(--line)}
-button.cy{background:var(--cy);box-shadow:0 4px 0 #23897d,0 0 0 3px var(--line)}
+button{background:var(--ink);color:var(--line);border:0;padding:5px 14px;cursor:pointer;box-shadow:0 3px 0 #8c7f63;margin:0 6px 6px 0}
+button:hover{filter:brightness(1.1)}
+button:active{transform:translateY(3px);box-shadow:none}
+button.cy{background:var(--cy);box-shadow:0 3px 0 #23897d}
+button.pk{background:var(--pk);box-shadow:0 3px 0 #a02a53}
+button.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 2px var(--dim)}
 button:focus-visible,input:focus-visible,textarea:focus-visible,.row:focus-visible{outline:3px dashed var(--yl);outline-offset:2px}
-.tabs button{opacity:.6}.tabs button.on{opacity:1;background:var(--yl);box-shadow:0 4px 0 #a98a0f,0 0 0 3px var(--line)}
-input[type=text],input[type=search],textarea{background:var(--line);border:0;box-shadow:0 0 0 3px var(--dim);padding:6px 10px;width:100%}
-textarea{height:260px;resize:vertical;font-size:20px;line-height:1.15}
-.layout{display:grid;grid-template-columns:200px 1fr;gap:20px}
-.groups button{display:block;width:100%;text-align:left;background:transparent;color:var(--ink);box-shadow:none;padding:5px 8px;margin:0 0 4px}
-.groups button.on{background:var(--cy);color:var(--line)}
-.groups button span{float:right;opacity:.7}
-.list{max-height:420px;overflow:auto;margin-top:12px;background:var(--line);padding:6px}
-.row{display:grid;grid-template-columns:26px minmax(0,1fr) 80px;gap:8px;align-items:center;padding:5px 6px;cursor:pointer;border-bottom:2px dotted #3a2a52}
-.row:hover{background:#2c1d40}
-.row b{font-weight:400;color:var(--yl);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.row small{grid-column:2/4;color:var(--dim);font-size:18px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.row .sz{text-align:right;color:var(--cy)}
-input[type=checkbox]{appearance:none;width:20px;height:20px;background:var(--line);box-shadow:0 0 0 3px var(--ink);margin:0;cursor:pointer}
-input[type=checkbox]:checked{background:var(--pk);box-shadow:0 0 0 3px var(--ink),inset 0 0 0 4px var(--line)}
-.empty{padding:24px;text-align:center;color:var(--dim)}
-dialog{background:var(--panel);color:var(--ink);border:0;padding:16px;width:min(680px,94vw);box-shadow:0 0 0 4px var(--line),0 0 0 8px var(--ink)}
-dialog::backdrop{background:rgba(10,4,20,.8)}
-.note{color:var(--dim);margin:0 0 10px}
-#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--yl);color:var(--line);padding:8px 16px;box-shadow:0 0 0 3px var(--line);display:none;z-index:9}
-@media(max-width:640px){.layout{grid-template-columns:1fr}.groups{display:flex;flex-wrap:wrap;gap:4px}.groups button{width:auto}body{font-size:20px}}
-@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+input[type=search],input[type=text],textarea{background:var(--deep);border:0;box-shadow:inset 0 0 0 2px #3d2c55;padding:7px 10px;width:100%}
+textarea{height:220px;resize:vertical;font-size:19px;line-height:1.15;word-break:break-all}
+#groups button{display:block;width:100%;text-align:left;background:transparent;color:var(--dim);box-shadow:none;padding:5px 8px;margin:0 0 2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#groups button.on{color:var(--ink);background:var(--deep);box-shadow:inset 4px 0 0 var(--cy)}
+#groups i{font-style:normal;float:right;margin-left:8px;color:var(--cy)}
+.acts{margin:12px 0 2px}
+.meta{display:flex;align-items:center;gap:10px;color:var(--dim);padding:6px 8px;font-size:19px}
+.list{background:var(--deep);max-height:440px;overflow:auto}
+.row{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px;cursor:pointer;border-top:2px solid var(--panel)}
+.row:hover{background:#1f1530}
+.nm{min-width:0}
+.nm b{font-weight:400;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nm small{display:block;color:var(--dim);font-size:18px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sz{color:var(--cy);font-size:19px}
+input[type=checkbox]{appearance:none;width:18px;height:18px;background:var(--deep);box-shadow:0 0 0 2px var(--dim);margin:0 2px;cursor:pointer}
+input[type=checkbox]:checked{background:var(--cy);box-shadow:0 0 0 2px var(--cy),inset 0 0 0 4px var(--deep)}
+.empty{padding:28px;text-align:center;color:var(--dim)}
+dialog{background:var(--panel);color:var(--ink);border:0;padding:18px;width:min(640px,94vw);box-shadow:0 0 0 3px var(--line),8px 8px 0 3px var(--line)}
+dialog::backdrop{background:rgba(10,4,20,.82)}
+.note{color:var(--dim);margin:0 0 8px;font-size:19px}
+.pv{max-height:200px;overflow:auto;background:var(--deep);margin-top:10px}
+.pv div{padding:5px 8px;display:flex;justify-content:space-between;gap:10px}
+.pv em{font-style:normal;color:var(--yl)}
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--yl);color:var(--line);padding:6px 16px;display:none;z-index:9;box-shadow:0 3px 0 #a98a0f}
+[hidden]{display:none!important}
+.one{display:block}
+@media(max-width:640px){.box{grid-template-columns:1fr}#groups{display:flex;flex-wrap:wrap}#groups button{width:auto}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="box">
-    <header>
-      <h1>SAVE VAULT</h1>
-      <div class="stat" id="stat"></div>
-    </header>
-    <p class="note" style="margin-top:14px">Chỉ thấy dữ liệu của cùng origin. Hãy đặt file này trong cùng repo với các game.</p>
-    <div class="tabs">
-      <button id="t-ls" class="on">localStorage</button>
-      <button id="t-idb">IndexedDB</button>
-    </div>
-  </div>
+  <header>
+    <h1>SAVE VAULT</h1>
+    <nav><button id="t-ls" class="on">localStorage</button><button id="t-idb">IndexedDB</button></nav>
+  </header>
 
   <div class="box" id="p-ls">
-    <div class="layout">
-      <div>
-        <h2>GAME</h2>
-        <div class="groups" id="groups"></div>
+    <aside><h2>GAME</h2><div id="groups"></div></aside>
+    <section>
+      <input type="search" id="q" placeholder="Tìm key hoặc tên game" aria-label="Tìm">
+      <div class="acts">
+        <button class="cy" id="share">Tạo code</button>
+        <button id="paste">Dán code</button>
+        <button class="ghost" id="new">+ Key</button>
+        <button class="pk" id="del" hidden>Xoá</button>
       </div>
-      <div>
-        <input type="search" id="q" placeholder="Tìm key hoặc nội dung..." aria-label="Tìm">
-        <div style="margin-top:12px">
-          <button id="all">Chọn tất cả</button>
-          <button class="cy" id="exp">Xuất file</button>
-          <label class="btn cy">Nhập file<input type="file" id="imp" accept=".json,application/json" hidden></label>
-          <button id="new">+ Key mới</button>
-          <button class="pk" id="del">Xoá đã chọn</button>
-        </div>
-        <div class="list" id="list"></div>
-      </div>
-    </div>
+      <div class="meta"><input type="checkbox" id="all" aria-label="Chọn tất cả"><span id="info"></span></div>
+      <div class="list" id="list"></div>
+    </section>
   </div>
 
-  <div class="box" id="p-idb" hidden>
+  <div class="box one" id="p-idb" hidden>
     <h2>INDEXEDDB</h2>
-    <p class="note">Chỉ liệt kê và xoá được database. Muốn sao lưu game dùng IndexedDB thì dùng chức năng xuất của chính game đó.</p>
+    <p class="note">Chỉ liệt kê và xoá database. Game dùng IndexedDB cần sao lưu bằng chức năng của chính game đó.</p>
     <div class="list" id="idblist"></div>
   </div>
 </div>
@@ -98,97 +91,112 @@ dialog::backdrop{background:rgba(10,4,20,.8)}
   <textarea id="dval" spellcheck="false"></textarea>
   <div style="margin-top:12px">
     <button class="cy" id="dsave">Lưu</button>
-    <button id="dfmt">Format JSON</button>
+    <button class="ghost" id="dfmt">Format JSON</button>
     <button class="pk" id="ddel">Xoá</button>
-    <button id="dclose">Đóng</button>
+    <button class="ghost" id="dclose">Đóng</button>
+  </div>
+</dialog>
+
+<dialog id="sdlg">
+  <h2>CODE CỦA BẠN</h2>
+  <p class="note" id="sinfo"></p>
+  <textarea id="scode" readonly></textarea>
+  <div style="margin-top:12px">
+    <button class="cy" id="scopy">Copy code</button>
+    <button class="ghost" id="sclose">Đóng</button>
+  </div>
+</dialog>
+
+<dialog id="pdlg">
+  <h2>DÁN CODE</h2>
+  <textarea id="pcode" placeholder="Dán code bắt đầu bằng SV1. vào đây" spellcheck="false"></textarea>
+  <div class="pv" id="pv" hidden></div>
+  <div style="margin-top:12px">
+    <button id="pview">Xem trước</button>
+    <button class="cy" id="pgo" hidden>Nhập</button>
+    <button class="ghost" id="pclose">Đóng</button>
   </div>
 </dialog>
 <div id="toast" role="status"></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js"></script>
 <script>
 (function(){
 var $=function(s){return document.querySelector(s)};
-var sel=new Set(), group='all', editing=null;
+var sel=new Set(),group='all',editing=null,editLz=false,cache={},parsed=null;
 
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function fmt(n){return n<1024?n+' B':n<1048576?(n/1024).toFixed(1)+' KB':(n/1048576).toFixed(2)+' MB'}
-function toast(m){var t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(function(){t.style.display='none'},2200)}
-function items(){
-  var a=[];
-  try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i),v=localStorage.getItem(k);a.push({k:k,v:v,size:(k.length+v.length)*2,g:gname(k)})}}catch(e){toast('Không đọc được localStorage')}
-  return a.sort(function(x,y){return x.k.localeCompare(y.k)});
+function toast(m){var t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(function(){t.style.display='none'},2400)}
+
+/* ---- đọc dữ liệu RPG Maker (MV nén LZString) ---- */
+function dec(k,v){
+  if(!/RPG (File\d+|Global|Config|Common)$/.test(k))return {text:v,lz:false};
+  var c=cache[k];if(c&&c.v===v)return c.d;
+  var d={text:v,lz:false};
+  try{if(window.LZString){var s=LZString.decompressFromBase64(v);if(s)d={text:s,lz:true}}}catch(e){}
+  cache[k]={v:v,d:d};return d;
 }
 function gname(k){var m=k.match(/^([^_:\-.\/ ]+)[_:\-.\/ ]/);return m?m[1]:'(khác)'}
-
-function render(){
-  var all=items(), q=$('#q').value.toLowerCase(), gs={};
-  all.forEach(function(o){gs[o.g]=(gs[o.g]||0)+1});
-  if(group!=='all'&&!gs[group])group='all';
-  var total=all.reduce(function(s,o){return s+o.size},0);
-  $('#stat').textContent=all.length+' key / '+fmt(total)+' (giới hạn ~5 MB)';
-  var gh='<button data-g="all" class="'+(group==='all'?'on':'')+'">Tất cả<span>'+all.length+'</span></button>';
-  Object.keys(gs).sort().forEach(function(g){gh+='<button data-g="'+esc(g)+'" class="'+(group===g?'on':'')+'">'+esc(g)+'<span>'+gs[g]+'</span></button>'});
-  $('#groups').innerHTML=gh;
-  var shown=all.filter(function(o){return (group==='all'||o.g===group)&&(!q||o.k.toLowerCase().indexOf(q)>-1||o.v.toLowerCase().indexOf(q)>-1)});
-  $('#list').innerHTML=shown.length?shown.map(function(o){
-    return '<div class="row" tabindex="0" data-k="'+esc(o.k)+'"><input type="checkbox" aria-label="Chọn" '+(sel.has(o.k)?'checked':'')+'><b>'+esc(o.k)+'</b><span class="sz">'+fmt(o.size)+'</span><small>'+esc(o.v.slice(0,120))+'</small></div>';
-  }).join(''):'<div class="empty">Không có key nào. Chơi game rồi quay lại, hoặc nhập file save.</div>';
-  $('#list')._shown=shown.map(function(o){return o.k});
+function items(){
+  var a=[],gi={};
+  try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i),v=localStorage.getItem(k),d=dec(k,v);
+    a.push({k:k,v:v,txt:d.text,size:(k.length+v.length)*2,g:gname(k)});
+    if(/RPG Global$/.test(k)){try{var j=JSON.parse(d.text);if(Array.isArray(j))gi[k.replace(/RPG Global$/,'')]=j}catch(e){}}
+  }}catch(e){toast('Không đọc được localStorage')}
+  a.forEach(function(o){
+    var m=o.k.match(/^(.*)RPG File(\d+)$/);
+    if(m){var inf=gi[m[1]]&&gi[m[1]][+m[2]];if(inf&&inf.title){o.title=inf.title;o.info=inf;o.g=inf.title}else o.g='RPG Maker (không rõ game)'}
+    else if(/RPG \w+$/.test(o.k))o.g='RPG Maker (chung)';
+  });
+  return a.sort(function(x,y){return x.k.localeCompare(y.k,undefined,{numeric:true})});
 }
 
+/* ---- giao diện danh sách ---- */
+var shown=[];
+function render(){
+  var all=items(),q=$('#q').value.toLowerCase(),gs={};
+  all.forEach(function(o){gs[o.g]=(gs[o.g]||0)+1});
+  if(group!=='all'&&!gs[group])group='all';
+  var gh='<button data-g="all" class="'+(group==='all'?'on':'')+'">Tất cả<i>'+all.length+'</i></button>';
+  Object.keys(gs).sort().forEach(function(g){gh+='<button title="'+esc(g)+'" data-g="'+esc(g)+'" class="'+(group===g?'on':'')+'">'+esc(g)+'<i>'+gs[g]+'</i></button>'});
+  $('#groups').innerHTML=gh;
+  var rows=all.filter(function(o){return (group==='all'||o.g===group)&&(!q||o.k.toLowerCase().indexOf(q)>-1||(o.title||'').toLowerCase().indexOf(q)>-1||o.txt.toLowerCase().indexOf(q)>-1)});
+  shown=rows.map(function(o){return o.k});
+  $('#list').innerHTML=rows.length?rows.map(function(o){
+    return '<div class="row" tabindex="0" data-k="'+esc(o.k)+'"><input type="checkbox" aria-label="Chọn" '+(sel.has(o.k)?'checked':'')+'><div class="nm"><b>'+esc(o.k)+'</b><small>'+esc(o.title||o.txt.slice(0,70))+'</small></div><span class="sz">'+fmt(o.size)+'</span></div>';
+  }).join(''):'<div class="empty">Chưa có key nào. Chơi game rồi quay lại, hoặc dán code save.</div>';
+  var total=all.reduce(function(s,o){return s+o.size},0);
+  $('#info').textContent=(sel.size?sel.size+' đã chọn  |  ':'')+rows.length+' key  |  tổng '+fmt(total)+' / ~5 MB';
+  $('#all').checked=rows.length>0&&shown.every(function(k){return sel.has(k)});
+  $('#del').hidden=!sel.size;$('#del').textContent='Xoá '+sel.size;
+}
 $('#groups').onclick=function(e){var b=e.target.closest('button');if(b){group=b.dataset.g;render()}};
 $('#q').oninput=render;
 $('#list').onclick=function(e){
   var r=e.target.closest('.row');if(!r)return;
   var k=r.dataset.k;
-  if(e.target.type==='checkbox'){e.target.checked?sel.add(k):sel.delete(k);return}
+  if(e.target.type==='checkbox'){e.target.checked?sel.add(k):sel.delete(k);render();return}
   openEd(k);
 };
 $('#list').onkeydown=function(e){if(e.key==='Enter'&&e.target.classList.contains('row'))openEd(e.target.dataset.k)};
-
-$('#all').onclick=function(){
-  var s=$('#list')._shown||[], every=s.length&&s.every(function(k){return sel.has(k)});
-  s.forEach(function(k){every?sel.delete(k):sel.add(k)});render();
-};
+$('#all').onchange=function(e){shown.forEach(function(k){e.target.checked?sel.add(k):sel.delete(k)});render()};
 $('#del').onclick=function(){
   var ks=Array.from(sel).filter(function(k){return localStorage.getItem(k)!==null});
-  if(!ks.length)return toast('Chưa chọn key nào');
+  if(!ks.length)return;
   if(!confirm('Xoá '+ks.length+' key? Không hoàn tác được.'))return;
   ks.forEach(function(k){localStorage.removeItem(k)});sel.clear();render();toast('Đã xoá '+ks.length+' key');
 };
-$('#exp').onclick=function(){
-  var all=items(), pick=sel.size?all.filter(function(o){return sel.has(o.k)}):all.filter(function(o){return group==='all'||o.g===group});
-  if(!pick.length)return toast('Không có gì để xuất');
-  var data={};pick.forEach(function(o){data[o.k]=o.v});
-  var blob=new Blob([JSON.stringify({origin:location.origin,exported:new Date().toISOString(),data:data},null,2)],{type:'application/json'});
-  var a=document.createElement('a');a.href=URL.createObjectURL(blob);
-  a.download='saves-'+(sel.size?'chon':group==='all'?'tatca':group)+'-'+new Date().toISOString().slice(0,10)+'.json';
-  document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href)},1000);
-  toast('Đã xuất '+pick.length+' key');
-};
-$('#imp').onchange=function(e){
-  var f=e.target.files[0];if(!f)return;
-  var r=new FileReader();
-  r.onload=function(){
-    try{
-      var j=JSON.parse(r.result), d=(j&&j.data&&typeof j.data==='object')?j.data:j, ks=Object.keys(d);
-      if(!ks.length)return toast('File rỗng');
-      var over=ks.filter(function(k){return localStorage.getItem(k)!==null}).length;
-      if(!confirm('Nhập '+ks.length+' key ('+over+' key sẽ bị ghi đè)?'))return;
-      ks.forEach(function(k){localStorage.setItem(k,typeof d[k]==='string'?d[k]:JSON.stringify(d[k]))});
-      render();toast('Đã nhập '+ks.length+' key');
-    }catch(err){toast('File JSON không hợp lệ')}
-  };
-  r.readAsText(f);e.target.value='';
-};
 
+/* ---- sửa key ---- */
 var dlg=$('#dlg');
 function openEd(k){
   editing=k;
   $('#dtitle').textContent=k===null?'KEY MỚI':'SỬA KEY';
   $('#dkey').value=k===null?'':k;
-  $('#dval').value=k===null?'':localStorage.getItem(k);
-  $('#ddel').style.display=k===null?'none':'';
+  var raw=k===null?'':localStorage.getItem(k),d=dec(k||'',raw);editLz=d.lz;
+  $('#dval').value=d.text;
+  $('#ddel').hidden=k===null;
   dlg.showModal();
 }
 $('#new').onclick=function(){openEd(null)};
@@ -197,8 +205,9 @@ $('#dfmt').onclick=function(){try{$('#dval').value=JSON.stringify(JSON.parse($('
 $('#dsave').onclick=function(){
   var k=$('#dkey').value;if(!k)return toast('Cần nhập key');
   try{
+    var val=$('#dval').value;if(editLz&&window.LZString)val=LZString.compressToBase64(val);
     if(editing!==null&&editing!==k)localStorage.removeItem(editing);
-    localStorage.setItem(k,$('#dval').value);
+    localStorage.setItem(k,val);
   }catch(e){return toast('Lưu thất bại (đầy bộ nhớ?)')}
   dlg.close();render();toast('Đã lưu');
 };
@@ -207,6 +216,64 @@ $('#ddel').onclick=function(){
   localStorage.removeItem(editing);sel.delete(editing);dlg.close();render();toast('Đã xoá');
 };
 
+/* ---- share code ---- */
+function hash(s){var h=5381;for(var i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return (h>>>0).toString(36)}
+$('#share').onclick=function(){
+  if(!window.LZString)return toast('Chưa tải được thư viện nén, kiểm tra mạng');
+  var all=items(),pick=sel.size?all.filter(function(o){return sel.has(o.k)}):all.filter(function(o){return group==='all'||o.g===group});
+  if(!pick.length)return toast('Không có gì để chia sẻ');
+  var d={},g={};pick.forEach(function(o){d[o.k]=o.v;if(o.info)g[o.k]=o.info});
+  var p=LZString.compressToEncodedURIComponent(JSON.stringify({d:d,g:g})),code='SV1.'+hash(p)+'.'+p;
+  $('#scode').value=code;
+  $('#sinfo').textContent=pick.length+' key, code dài '+code.length.toLocaleString('vi')+' ký tự'+(code.length>100000?'. Code rất dài, app chat có thể cắt mất. Hãy chọn ít key hơn.':'.');
+  $('#sdlg').showModal();$('#scode').select();
+};
+$('#scopy').onclick=function(){
+  var t=$('#scode');t.select();
+  (navigator.clipboard?navigator.clipboard.writeText(t.value):Promise.reject()).then(function(){toast('Đã copy')},function(){document.execCommand('copy');toast('Đã copy')});
+};
+$('#sclose').onclick=function(){$('#sdlg').close()};
+
+/* ---- paste code ---- */
+function parseCode(t){
+  if(!window.LZString)throw 'Chưa tải được thư viện nén, kiểm tra mạng';
+  t=t.replace(/\s+/g,'');
+  var m=t.match(/^SV1\.([0-9a-z]+)\.(.+)$/);
+  if(!m)throw 'Code không đúng định dạng';
+  if(hash(m[2])!==m[1])throw 'Code bị thiếu hoặc sai ký tự, có thể đã bị cắt khi dán';
+  var j=JSON.parse(LZString.decompressFromEncodedURIComponent(m[2]));
+  if(!j||!j.d)throw 'Không đọc được nội dung code';
+  return j;
+}
+$('#paste').onclick=function(){$('#pcode').value='';$('#pv').hidden=true;$('#pgo').hidden=true;parsed=null;$('#pdlg').showModal()};
+$('#pclose').onclick=function(){$('#pdlg').close()};
+$('#pview').onclick=function(){
+  try{parsed=parseCode($('#pcode').value)}catch(e){parsed=null;$('#pgo').hidden=true;return toast(typeof e==='string'?e:'Code không hợp lệ')}
+  var ks=Object.keys(parsed.d);
+  $('#pv').innerHTML=ks.map(function(k){
+    var inf=parsed.g&&parsed.g[k],over=localStorage.getItem(k)!==null;
+    return '<div><span>'+esc(k)+(inf?' - '+esc(inf.title):'')+'</span><em>'+(over?'ghi đè':'mới')+'</em></div>';
+  }).join('');
+  $('#pv').hidden=false;$('#pgo').hidden=false;
+  $('#pgo').textContent='Nhập '+ks.length+' key';
+};
+$('#pgo').onclick=function(){
+  if(!parsed)return;
+  var j=parsed,ks=Object.keys(j.d);
+  try{
+    ks.forEach(function(k){localStorage.setItem(k,j.d[k])});
+    Object.keys(j.g||{}).forEach(function(k){
+      var m=k.match(/^(.*)RPG File(\d+)$/);if(!m)return;
+      var gk=m[1]+'RPG Global',arr=[],lz=!!window.LZString,raw=localStorage.getItem(gk);
+      if(raw!==null){var dd=dec(gk,raw);lz=dd.lz;try{arr=JSON.parse(dd.text)}catch(e){arr=[]}if(!Array.isArray(arr))arr=[]}
+      arr[+m[2]]=j.g[k];
+      var t=JSON.stringify(arr);localStorage.setItem(gk,lz?LZString.compressToBase64(t):t);
+    });
+  }catch(e){return toast('Nhập thất bại (đầy bộ nhớ?)')}
+  $('#pdlg').close();render();toast('Đã nhập '+ks.length+' key');
+};
+
+/* ---- tab IndexedDB ---- */
 function tab(t){
   $('#t-ls').classList.toggle('on',t==='ls');$('#t-idb').classList.toggle('on',t==='idb');
   $('#p-ls').hidden=t!=='ls';$('#p-idb').hidden=t!=='idb';
@@ -214,13 +281,12 @@ function tab(t){
 }
 $('#t-ls').onclick=function(){tab('ls')};
 $('#t-idb').onclick=function(){tab('idb')};
-
 function loadIdb(){
   var box=$('#idblist');
   if(!indexedDB.databases){box.innerHTML='<div class="empty">Trình duyệt không hỗ trợ liệt kê IndexedDB.</div>';return}
   indexedDB.databases().then(function(l){
     box.innerHTML=l.length?l.map(function(d){
-      return '<div class="row" style="grid-template-columns:minmax(0,1fr) 70px 90px"><b>'+esc(d.name)+'</b><span class="sz">v'+d.version+'</span><button class="pk" data-db="'+esc(d.name)+'">Xoá</button></div>';
+      return '<div class="row" style="grid-template-columns:minmax(0,1fr) auto auto"><div class="nm"><b>'+esc(d.name)+'</b></div><span class="sz">v'+d.version+'</span><button class="pk" style="margin:0" data-db="'+esc(d.name)+'">Xoá</button></div>';
     }).join(''):'<div class="empty">Chưa có database nào.</div>';
   });
 }
@@ -229,7 +295,7 @@ $('#idblist').onclick=function(e){
   if(!confirm('Xoá database "'+n+'"? Không hoàn tác được.'))return;
   var r=indexedDB.deleteDatabase(n);
   r.onsuccess=function(){toast('Đã xoá');loadIdb()};
-  r.onblocked=function(){toast('Đang bị chặn: đóng các tab game đang mở');};
+  r.onblocked=function(){toast('Bị chặn: hãy đóng các tab game đang mở')};
 };
 
 render();
