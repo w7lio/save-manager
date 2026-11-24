@@ -62,6 +62,7 @@ dialog input[type=text]{width:100%;margin-bottom:8px}
   <section id="ls">
     <div class="bar">
       <input type="text" id="q" placeholder="Tìm key hoặc nội dung...">
+      <button id="ren">✎ Đặt tên nhóm</button>
       <button id="add">+ Thêm</button>
       <button id="expSel">Xuất đã chọn</button>
       <button id="expAll" class="pr">Xuất tất cả</button>
@@ -70,7 +71,7 @@ dialog input[type=text]{width:100%;margin-bottom:8px}
     </div>
     <div class="chips" id="chips"></div>
     <table>
-      <thead><tr><th style="width:28px"><input type="checkbox" id="all"></th><th>Key</th><th>Giá trị</th><th>Dung lượng</th><th></th></tr></thead>
+      <thead><tr><th style="width:28px"><input type="checkbox" id="all"></th><th>Game</th><th>Key</th><th>Giá trị</th><th>Dung lượng</th><th></th></tr></thead>
       <tbody id="rows"></tbody>
     </table>
     <div class="note" id="sum"></div>
@@ -113,6 +114,18 @@ function download(name,obj){
 const stamp=()=>new Date().toISOString().slice(0,19).replace(/[:T]/g,'-');
 $('#origin').textContent=location.origin;
 
+/* ---------- tên game ---------- */
+const NK='__sm_names';
+let NAMES={},FILE_NAMES={};
+try{NAMES=JSON.parse(localStorage.getItem(NK)||'{}')}catch{}
+const nameOf=k=>NAMES[k]||FILE_NAMES[k]||'';
+function setName(k){
+  const n=prompt(`Tên game hiển thị cho "${k.replace(/^idb:/,'')}" (để trống để xoá):`,nameOf(k));
+  if(n===null)return false;
+  if(n.trim())NAMES[k]=n.trim();else delete NAMES[k];
+  localStorage.setItem(NK,JSON.stringify(NAMES));return true;
+}
+
 /* ---------- tabs ---------- */
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===t));
@@ -125,22 +138,26 @@ let group='',selected=new Set();
 const prefixOf=k=>{const m=k.match(/^([^_:.\-\/\s]{1,40})[_:.\-\/]/);return m?m[1]:'(khác)'};
 function lsEntries(){
   const a=[];
-  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);a.push([k,localStorage.getItem(k)])}
+  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k===NK)continue;a.push([k,localStorage.getItem(k)])}
   return a.sort((x,y)=>x[0].localeCompare(y[0]));
 }
 function renderLS(){
   const all=lsEntries(),q=$('#q').value.toLowerCase();
   const counts={};all.forEach(([k])=>{const p=prefixOf(k);counts[p]=(counts[p]||0)+1});
   $('#chips').innerHTML=`<span class="chip ${group===''?'on':''}" data-g="">Tất cả (${all.length})</span>`+
-    Object.keys(counts).sort().map(p=>`<span class="chip ${group===p?'on':''}" data-g="${esc(p)}">${esc(p)} (${counts[p]})</span>`).join('');
-  $('#chips').querySelectorAll('.chip').forEach(c=>c.onclick=()=>{group=c.dataset.g;renderLS()});
+    Object.keys(counts).sort().map(p=>`<span class="chip ${group===p?'on':''}" data-g="${esc(p)}">${nameOf(p)?esc(nameOf(p))+' <small>('+esc(p)+')</small>':esc(p)} (${counts[p]})</span>`).join('');
+  $('#chips').querySelectorAll('.chip').forEach(c=>{
+    c.onclick=()=>{group=c.dataset.g;renderLS()};
+    c.ondblclick=()=>{if(c.dataset.g&&setName(c.dataset.g))renderLS()};
+  });
   const list=all.filter(([k,v])=>(!group||prefixOf(k)===group)&&(!q||k.toLowerCase().includes(q)||v.toLowerCase().includes(q)));
   $('#rows').innerHTML=list.length?list.map(([k,v])=>`<tr>
     <td><input type="checkbox" class="cb" data-k="${esc(k)}" ${selected.has(k)?'checked':''}></td>
+    <td class="n">${esc(nameOf(prefixOf(k)))}</td>
     <td class="k">${esc(k)}</td><td class="v" title="${esc(v.slice(0,300))}">${esc(v.slice(0,120))}</td>
     <td class="n">${fmtSize((k.length+v.length)*2)}</td>
     <td class="acts"><button data-a="edit" data-k="${esc(k)}">Sửa</button> <button data-a="del" class="dg" data-k="${esc(k)}">Xoá</button></td></tr>`).join('')
-    :`<tr><td colspan="5" class="empty">Không có dữ liệu</td></tr>`;
+    :`<tr><td colspan="6" class="empty">Không có dữ liệu</td></tr>`;
   const total=all.reduce((s,[k,v])=>s+(k.length+v.length)*2,0);
   $('#sum').textContent=`${list.length}/${all.length} key hiển thị • tổng ~${fmtSize(total)} (giới hạn trình duyệt thường ~5–10 MB)`;
   $('#rows').querySelectorAll('.cb').forEach(c=>c.onchange=()=>{c.checked?selected.add(c.dataset.k):selected.delete(c.dataset.k)});
@@ -155,6 +172,7 @@ $('#all').onchange=e=>{document.querySelectorAll('.cb').forEach(c=>{c.checked=e.
 $('#q').oninput=renderLS;
 function openDlg(k,v){$('#dk').value=k||'';$('#dk').dataset.old=k||'';$('#dv').value=v||'';$('#dlg').showModal()}
 $('#add').onclick=()=>openDlg('','');
+$('#ren').onclick=()=>{if(!group)return toast('Bấm chọn một nhóm trước (hoặc bấm đúp vào nhóm)',1);if(setName(group))renderLS()};
 $('#dc').onclick=()=>$('#dlg').close();
 $('#fmt').onclick=()=>{try{$('#dv').value=JSON.stringify(JSON.parse($('#dv').value),null,2)}catch{toast('Không phải JSON hợp lệ',1)}};
 $('#ds').onclick=()=>{
@@ -165,7 +183,7 @@ $('#ds').onclick=()=>{
 };
 $('#expAll').onclick=()=>{
   const o={};lsEntries().forEach(([k,v])=>o[k]=v);
-  download(`save-localStorage-${stamp()}.json`,{type:'save-manager',version:1,localStorage:o});
+  download(`save-localStorage-${stamp()}.json`,{type:'save-manager',version:1,names:NAMES,localStorage:o});
 };
 $('#expSel').onclick=()=>{
   if(!selected.size)return toast('Chưa chọn key nào',1);
@@ -185,6 +203,7 @@ $('#file').onchange=async e=>{
     const d=JSON.parse(await f.text());
     if(d.type!=='save-manager')throw new Error('Không phải file của Save Manager');
     let msg=[];
+    if(d.names){Object.assign(NAMES,d.names);localStorage.setItem(NK,JSON.stringify(NAMES))}
     if(d.localStorage){
       const n=Object.keys(d.localStorage).length;
       if(confirm(`Nhập ${n} key localStorage? Key trùng sẽ bị ghi đè.`)){
@@ -304,13 +323,14 @@ async function loadDbs(){
     const list=(await indexedDB.databases()).filter(x=>x.name);
     if(!list.length){box.innerHTML='<div class="empty">Chưa có IndexedDB nào</div>';return}
     const infos=await Promise.all(list.map(x=>dbInfo(x.name).catch(e=>({name:x.name,err:e.message}))));
-    box.innerHTML=infos.map((d,i)=>`<div class="card"><h3>${esc(d.name)}</h3>
+    box.innerHTML=infos.map((d,i)=>`<div class="card"><h3>${nameOf('idb:'+d.name)?esc(nameOf('idb:'+d.name))+' <small style="color:var(--mut);font-weight:400">'+esc(d.name)+'</small>':esc(d.name)}</h3>
       ${d.err?`<div class="st">Lỗi: ${esc(d.err)}</div>`:`<div class="st">version ${d.version} • ${d.stores.length} store</div>
       ${d.stores.map(s=>`<div class="st">• ${esc(s.name)}: ${s.count} bản ghi</div>`).join('')}`}
-      <div class="bar" style="margin:8px 0 0"><button data-a="exp" data-i="${i}">Xuất</button><button class="dg" data-a="del" data-i="${i}">Xoá DB</button></div></div>`).join('');
+      <div class="bar" style="margin:8px 0 0"><button data-a="ren" data-i="${i}">✎ Đặt tên</button><button data-a="exp" data-i="${i}">Xuất</button><button class="dg" data-a="del" data-i="${i}">Xoá DB</button></div></div>`).join('');
     box.querySelectorAll('button').forEach(b=>b.onclick=async()=>{
       const name=infos[b.dataset.i].name;
       try{
+        if(b.dataset.a==='ren'){if(setName('idb:'+name))loadDbs();return}
         if(b.dataset.a==='exp'){download(`save-idb-${name.replace(/[^\w.-]+/g,'_')}-${stamp()}.json`,{type:'save-manager',version:1,indexedDB:[await exportDb(name)]});toast('Đã xuất')}
         else if(confirm(`Xoá toàn bộ database "${name}"?`)){
           await new Promise((res,rej)=>{const r=indexedDB.deleteDatabase(name);r.onsuccess=res;r.onerror=()=>rej(r.error);r.onblocked=()=>rej(new Error('Bị chặn: đóng các tab game đang mở'))});
@@ -332,6 +352,9 @@ $('#idbExpAll').onclick=async()=>{
 };
 
 renderLS();
+/* tuỳ chọn: đặt file games.json cạnh trang này để tự có sẵn tên game.
+   Ví dụ: {"rpg":"Game RPG","snake":"Rắn săn mồi","idb:/idbfs/abc123":"Game Unity"} */
+fetch('games.json',{cache:'no-store'}).then(r=>r.ok?r.json():{}).catch(()=>({})).then(j=>{FILE_NAMES=j||{};renderLS()});
 </script>
 </body>
 </html>
