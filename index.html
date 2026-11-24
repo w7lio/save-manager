@@ -2,359 +2,238 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Save Manager</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Save Vault</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#14161a;--panel:#1d2026;--line:#2c313a;--tx:#e6e8ec;--mut:#8b93a1;--ac:#5b9dff;--dg:#ff6b6b;--ok:#4cd08a}
+:root{--bg:#241633;--panel:#33204a;--ink:#f4ead0;--dim:#a99bc2;--line:#0f0819;--cy:#4fe3d0;--pk:#ff5c8a;--yl:#ffd23f;color-scheme:dark}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-header{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
-h1{margin:0;font-size:18px}
-header small{color:var(--mut)}
-main{max-width:1100px;margin:0 auto;padding:16px}
-.tabs{display:flex;gap:4px;margin-bottom:12px}
-.tab{padding:8px 16px;border:1px solid var(--line);background:var(--panel);color:var(--mut);cursor:pointer;border-radius:8px 8px 0 0}
-.tab.on{color:var(--tx);border-bottom-color:var(--ac);box-shadow:inset 0 -2px var(--ac)}
-.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
-input[type=text],textarea,select{background:var(--panel);border:1px solid var(--line);color:var(--tx);border-radius:6px;padding:7px 10px;font:inherit}
-input[type=text]{min-width:200px;flex:1}
-button{background:var(--panel);border:1px solid var(--line);color:var(--tx);border-radius:6px;padding:7px 12px;cursor:pointer;font:inherit}
-button:hover{border-color:var(--ac)}
-button.dg:hover{border-color:var(--dg);color:var(--dg)}
-button.pr{background:var(--ac);border-color:var(--ac);color:#06101f;font-weight:600}
-.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-.chip{padding:3px 10px;border-radius:99px;border:1px solid var(--line);background:var(--panel);cursor:pointer;color:var(--mut);font-size:12px}
-.chip.on{background:var(--ac);color:#06101f;border-color:var(--ac)}
-table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}
-th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-th{color:var(--mut);font-weight:500;font-size:12px}
-td.k{font-family:ui-monospace,Consolas,monospace;word-break:break-all}
-td.v{color:var(--mut);font-family:ui-monospace,Consolas,monospace;max-width:380px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-td.n{white-space:nowrap;color:var(--mut)}
-tr:hover td{background:#22262d}
-.acts{white-space:nowrap}
-.acts button{padding:3px 8px;font-size:12px}
-.empty{padding:30px;text-align:center;color:var(--mut)}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:10px}
-.card h3{margin:0 0 6px;font-size:15px}
-.card .st{color:var(--mut);font-size:12px;margin:2px 0}
-dialog{background:var(--panel);color:var(--tx);border:1px solid var(--line);border-radius:10px;width:min(720px,94vw);padding:16px}
-dialog::backdrop{background:#000a}
-dialog textarea{width:100%;min-height:260px;font-family:ui-monospace,Consolas,monospace;font-size:13px}
-dialog input[type=text]{width:100%;margin-bottom:8px}
-.row{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
-#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ok);color:#04150b;padding:8px 16px;border-radius:8px;opacity:0;transition:.25s;pointer-events:none;font-weight:600}
-#toast.show{opacity:1}#toast.err{background:var(--dg);color:#fff}
-.note{color:var(--mut);font-size:12px;margin:10px 0}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:22px/1.2 'VT323',ui-monospace,Consolas,monospace;padding:16px;min-height:100vh;
+background-image:linear-gradient(45deg,#2a1a3b 25%,transparent 25%,transparent 75%,#2a1a3b 75%),linear-gradient(45deg,#2a1a3b 25%,transparent 25%,transparent 75%,#2a1a3b 75%);background-size:16px 16px;background-position:0 0,8px 8px}
+h1,h2,.px{font-family:'Press Start 2P',ui-monospace,monospace;font-weight:400}
+h1{font-size:20px;margin:0;color:var(--yl);text-shadow:3px 3px 0 var(--pk)}
+h2{font-size:11px;margin:0 0 12px;color:var(--cy)}
+.wrap{max-width:1000px;margin:0 auto}
+.box{background:var(--panel);box-shadow:0 0 0 4px var(--line),0 0 0 8px var(--ink),8px 8px 0 8px var(--line);padding:16px;margin:12px 8px 20px}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.stat{color:var(--dim);font-size:20px}
+button,.btn,input,textarea{font:inherit;color:inherit}
+button,.btn{background:var(--ink);color:var(--line);border:0;padding:6px 12px;cursor:pointer;box-shadow:0 4px 0 #8c7f63,0 0 0 3px var(--line);margin:3px 3px 7px 0;display:inline-block}
+button:hover,.btn:hover{background:#fff}
+button:active,.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #8c7f63,0 0 0 3px var(--line)}
+button.pk{background:var(--pk);box-shadow:0 4px 0 #a02a53,0 0 0 3px var(--line)}
+button.cy{background:var(--cy);box-shadow:0 4px 0 #23897d,0 0 0 3px var(--line)}
+button:focus-visible,input:focus-visible,textarea:focus-visible,.row:focus-visible{outline:3px dashed var(--yl);outline-offset:2px}
+.tabs button{opacity:.6}.tabs button.on{opacity:1;background:var(--yl);box-shadow:0 4px 0 #a98a0f,0 0 0 3px var(--line)}
+input[type=text],input[type=search],textarea{background:var(--line);border:0;box-shadow:0 0 0 3px var(--dim);padding:6px 10px;width:100%}
+textarea{height:260px;resize:vertical;font-size:20px;line-height:1.15}
+.layout{display:grid;grid-template-columns:200px 1fr;gap:20px}
+.groups button{display:block;width:100%;text-align:left;background:transparent;color:var(--ink);box-shadow:none;padding:5px 8px;margin:0 0 4px}
+.groups button.on{background:var(--cy);color:var(--line)}
+.groups button span{float:right;opacity:.7}
+.list{max-height:420px;overflow:auto;margin-top:12px;background:var(--line);padding:6px}
+.row{display:grid;grid-template-columns:26px minmax(0,1fr) 80px;gap:8px;align-items:center;padding:5px 6px;cursor:pointer;border-bottom:2px dotted #3a2a52}
+.row:hover{background:#2c1d40}
+.row b{font-weight:400;color:var(--yl);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row small{grid-column:2/4;color:var(--dim);font-size:18px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .sz{text-align:right;color:var(--cy)}
+input[type=checkbox]{appearance:none;width:20px;height:20px;background:var(--line);box-shadow:0 0 0 3px var(--ink);margin:0;cursor:pointer}
+input[type=checkbox]:checked{background:var(--pk);box-shadow:0 0 0 3px var(--ink),inset 0 0 0 4px var(--line)}
+.empty{padding:24px;text-align:center;color:var(--dim)}
+dialog{background:var(--panel);color:var(--ink);border:0;padding:16px;width:min(680px,94vw);box-shadow:0 0 0 4px var(--line),0 0 0 8px var(--ink)}
+dialog::backdrop{background:rgba(10,4,20,.8)}
+.note{color:var(--dim);margin:0 0 10px}
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--yl);color:var(--line);padding:8px 16px;box-shadow:0 0 0 3px var(--line);display:none;z-index:9}
+@media(max-width:640px){.layout{grid-template-columns:1fr}.groups{display:flex;flex-wrap:wrap;gap:4px}.groups button{width:auto}body{font-size:20px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
-<header>
-  <h1>🎮 Save Manager</h1>
-  <small id="origin"></small>
-</header>
-<main>
-  <div class="tabs">
-    <div class="tab on" data-t="ls">localStorage</div>
-    <div class="tab" data-t="idb">IndexedDB</div>
+<div class="wrap">
+  <div class="box">
+    <header>
+      <h1>SAVE VAULT</h1>
+      <div class="stat" id="stat"></div>
+    </header>
+    <p class="note" style="margin-top:14px">Chỉ thấy dữ liệu của cùng origin. Hãy đặt file này trong cùng repo với các game.</p>
+    <div class="tabs">
+      <button id="t-ls" class="on">localStorage</button>
+      <button id="t-idb">IndexedDB</button>
+    </div>
   </div>
 
-  <section id="ls">
-    <div class="bar">
-      <input type="text" id="q" placeholder="Tìm key hoặc nội dung...">
-      <button id="ren">✎ Đặt tên nhóm</button>
-      <button id="add">+ Thêm</button>
-      <button id="expSel">Xuất đã chọn</button>
-      <button id="expAll" class="pr">Xuất tất cả</button>
-      <button id="imp">Nhập file</button>
-      <button id="delSel" class="dg">Xoá đã chọn</button>
+  <div class="box" id="p-ls">
+    <div class="layout">
+      <div>
+        <h2>GAME</h2>
+        <div class="groups" id="groups"></div>
+      </div>
+      <div>
+        <input type="search" id="q" placeholder="Tìm key hoặc nội dung..." aria-label="Tìm">
+        <div style="margin-top:12px">
+          <button id="all">Chọn tất cả</button>
+          <button class="cy" id="exp">Xuất file</button>
+          <label class="btn cy">Nhập file<input type="file" id="imp" accept=".json,application/json" hidden></label>
+          <button id="new">+ Key mới</button>
+          <button class="pk" id="del">Xoá đã chọn</button>
+        </div>
+        <div class="list" id="list"></div>
+      </div>
     </div>
-    <div class="chips" id="chips"></div>
-    <table>
-      <thead><tr><th style="width:28px"><input type="checkbox" id="all"></th><th>Game</th><th>Key</th><th>Giá trị</th><th>Dung lượng</th><th></th></tr></thead>
-      <tbody id="rows"></tbody>
-    </table>
-    <div class="note" id="sum"></div>
-  </section>
+  </div>
 
-  <section id="idb" hidden>
-    <div class="bar">
-      <button id="idbRef">Làm mới</button>
-      <button id="idbExpAll" class="pr">Xuất tất cả DB</button>
-      <button id="idbImp">Nhập file</button>
-    </div>
-    <div id="dbs"></div>
-    <div class="note">Nhiều game (Unity, Emscripten, Godot...) lưu save ở IndexedDB. Nếu xoá bị treo, hãy đóng các tab game đang mở rồi thử lại.</div>
-  </section>
-</main>
+  <div class="box" id="p-idb" hidden>
+    <h2>INDEXEDDB</h2>
+    <p class="note">Chỉ liệt kê và xoá được database. Muốn sao lưu game dùng IndexedDB thì dùng chức năng xuất của chính game đó.</p>
+    <div class="list" id="idblist"></div>
+  </div>
+</div>
 
 <dialog id="dlg">
-  <input type="text" id="dk" placeholder="Key">
-  <textarea id="dv" placeholder="Giá trị"></textarea>
-  <div class="row">
-    <button id="fmt">Format JSON</button>
-    <button id="dc">Huỷ</button>
-    <button id="ds" class="pr">Lưu</button>
+  <h2 id="dtitle">SỬA KEY</h2>
+  <p class="note">Key</p>
+  <input type="text" id="dkey" spellcheck="false">
+  <p class="note" style="margin-top:12px">Giá trị</p>
+  <textarea id="dval" spellcheck="false"></textarea>
+  <div style="margin-top:12px">
+    <button class="cy" id="dsave">Lưu</button>
+    <button id="dfmt">Format JSON</button>
+    <button class="pk" id="ddel">Xoá</button>
+    <button id="dclose">Đóng</button>
   </div>
 </dialog>
-
-<input type="file" id="file" accept=".json,application/json" hidden>
-<div id="toast"></div>
+<div id="toast" role="status"></div>
 
 <script>
-const $=s=>document.querySelector(s);
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const fmtSize=b=>b<1024?b+' B':b<1048576?(b/1024).toFixed(1)+' KB':(b/1048576).toFixed(2)+' MB';
-function toast(m,err){const t=$('#toast');t.textContent=m;t.className='show'+(err?' err':'');clearTimeout(toast.t);toast.t=setTimeout(()=>t.className='',2200)}
-function download(name,obj){
-  const b=new Blob([JSON.stringify(obj)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;a.click();
-  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
-}
-const stamp=()=>new Date().toISOString().slice(0,19).replace(/[:T]/g,'-');
-$('#origin').textContent=location.origin;
+(function(){
+var $=function(s){return document.querySelector(s)};
+var sel=new Set(), group='all', editing=null;
 
-/* ---------- tên game ---------- */
-const NK='__sm_names';
-let NAMES={},FILE_NAMES={};
-try{NAMES=JSON.parse(localStorage.getItem(NK)||'{}')}catch{}
-const nameOf=k=>NAMES[k]||FILE_NAMES[k]||'';
-function setName(k){
-  const n=prompt(`Tên game hiển thị cho "${k.replace(/^idb:/,'')}" (để trống để xoá):`,nameOf(k));
-  if(n===null)return false;
-  if(n.trim())NAMES[k]=n.trim();else delete NAMES[k];
-  localStorage.setItem(NK,JSON.stringify(NAMES));return true;
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function fmt(n){return n<1024?n+' B':n<1048576?(n/1024).toFixed(1)+' KB':(n/1048576).toFixed(2)+' MB'}
+function toast(m){var t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(function(){t.style.display='none'},2200)}
+function items(){
+  var a=[];
+  try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i),v=localStorage.getItem(k);a.push({k:k,v:v,size:(k.length+v.length)*2,g:gname(k)})}}catch(e){toast('Không đọc được localStorage')}
+  return a.sort(function(x,y){return x.k.localeCompare(y.k)});
+}
+function gname(k){var m=k.match(/^([^_:\-.\/ ]+)[_:\-.\/ ]/);return m?m[1]:'(khác)'}
+
+function render(){
+  var all=items(), q=$('#q').value.toLowerCase(), gs={};
+  all.forEach(function(o){gs[o.g]=(gs[o.g]||0)+1});
+  if(group!=='all'&&!gs[group])group='all';
+  var total=all.reduce(function(s,o){return s+o.size},0);
+  $('#stat').textContent=all.length+' key / '+fmt(total)+' (giới hạn ~5 MB)';
+  var gh='<button data-g="all" class="'+(group==='all'?'on':'')+'">Tất cả<span>'+all.length+'</span></button>';
+  Object.keys(gs).sort().forEach(function(g){gh+='<button data-g="'+esc(g)+'" class="'+(group===g?'on':'')+'">'+esc(g)+'<span>'+gs[g]+'</span></button>'});
+  $('#groups').innerHTML=gh;
+  var shown=all.filter(function(o){return (group==='all'||o.g===group)&&(!q||o.k.toLowerCase().indexOf(q)>-1||o.v.toLowerCase().indexOf(q)>-1)});
+  $('#list').innerHTML=shown.length?shown.map(function(o){
+    return '<div class="row" tabindex="0" data-k="'+esc(o.k)+'"><input type="checkbox" aria-label="Chọn" '+(sel.has(o.k)?'checked':'')+'><b>'+esc(o.k)+'</b><span class="sz">'+fmt(o.size)+'</span><small>'+esc(o.v.slice(0,120))+'</small></div>';
+  }).join(''):'<div class="empty">Không có key nào. Chơi game rồi quay lại, hoặc nhập file save.</div>';
+  $('#list')._shown=shown.map(function(o){return o.k});
 }
 
-/* ---------- tabs ---------- */
-document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
-  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===t));
-  $('#ls').hidden=t.dataset.t!=='ls';$('#idb').hidden=t.dataset.t!=='idb';
-  if(t.dataset.t==='idb')loadDbs();
-});
+$('#groups').onclick=function(e){var b=e.target.closest('button');if(b){group=b.dataset.g;render()}};
+$('#q').oninput=render;
+$('#list').onclick=function(e){
+  var r=e.target.closest('.row');if(!r)return;
+  var k=r.dataset.k;
+  if(e.target.type==='checkbox'){e.target.checked?sel.add(k):sel.delete(k);return}
+  openEd(k);
+};
+$('#list').onkeydown=function(e){if(e.key==='Enter'&&e.target.classList.contains('row'))openEd(e.target.dataset.k)};
 
-/* ---------- localStorage ---------- */
-let group='',selected=new Set();
-const prefixOf=k=>{const m=k.match(/^([^_:.\-\/\s]{1,40})[_:.\-\/]/);return m?m[1]:'(khác)'};
-function lsEntries(){
-  const a=[];
-  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k===NK)continue;a.push([k,localStorage.getItem(k)])}
-  return a.sort((x,y)=>x[0].localeCompare(y[0]));
+$('#all').onclick=function(){
+  var s=$('#list')._shown||[], every=s.length&&s.every(function(k){return sel.has(k)});
+  s.forEach(function(k){every?sel.delete(k):sel.add(k)});render();
+};
+$('#del').onclick=function(){
+  var ks=Array.from(sel).filter(function(k){return localStorage.getItem(k)!==null});
+  if(!ks.length)return toast('Chưa chọn key nào');
+  if(!confirm('Xoá '+ks.length+' key? Không hoàn tác được.'))return;
+  ks.forEach(function(k){localStorage.removeItem(k)});sel.clear();render();toast('Đã xoá '+ks.length+' key');
+};
+$('#exp').onclick=function(){
+  var all=items(), pick=sel.size?all.filter(function(o){return sel.has(o.k)}):all.filter(function(o){return group==='all'||o.g===group});
+  if(!pick.length)return toast('Không có gì để xuất');
+  var data={};pick.forEach(function(o){data[o.k]=o.v});
+  var blob=new Blob([JSON.stringify({origin:location.origin,exported:new Date().toISOString(),data:data},null,2)],{type:'application/json'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='saves-'+(sel.size?'chon':group==='all'?'tatca':group)+'-'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href)},1000);
+  toast('Đã xuất '+pick.length+' key');
+};
+$('#imp').onchange=function(e){
+  var f=e.target.files[0];if(!f)return;
+  var r=new FileReader();
+  r.onload=function(){
+    try{
+      var j=JSON.parse(r.result), d=(j&&j.data&&typeof j.data==='object')?j.data:j, ks=Object.keys(d);
+      if(!ks.length)return toast('File rỗng');
+      var over=ks.filter(function(k){return localStorage.getItem(k)!==null}).length;
+      if(!confirm('Nhập '+ks.length+' key ('+over+' key sẽ bị ghi đè)?'))return;
+      ks.forEach(function(k){localStorage.setItem(k,typeof d[k]==='string'?d[k]:JSON.stringify(d[k]))});
+      render();toast('Đã nhập '+ks.length+' key');
+    }catch(err){toast('File JSON không hợp lệ')}
+  };
+  r.readAsText(f);e.target.value='';
+};
+
+var dlg=$('#dlg');
+function openEd(k){
+  editing=k;
+  $('#dtitle').textContent=k===null?'KEY MỚI':'SỬA KEY';
+  $('#dkey').value=k===null?'':k;
+  $('#dval').value=k===null?'':localStorage.getItem(k);
+  $('#ddel').style.display=k===null?'none':'';
+  dlg.showModal();
 }
-function renderLS(){
-  const all=lsEntries(),q=$('#q').value.toLowerCase();
-  const counts={};all.forEach(([k])=>{const p=prefixOf(k);counts[p]=(counts[p]||0)+1});
-  $('#chips').innerHTML=`<span class="chip ${group===''?'on':''}" data-g="">Tất cả (${all.length})</span>`+
-    Object.keys(counts).sort().map(p=>`<span class="chip ${group===p?'on':''}" data-g="${esc(p)}">${nameOf(p)?esc(nameOf(p))+' <small>('+esc(p)+')</small>':esc(p)} (${counts[p]})</span>`).join('');
-  $('#chips').querySelectorAll('.chip').forEach(c=>{
-    c.onclick=()=>{group=c.dataset.g;renderLS()};
-    c.ondblclick=()=>{if(c.dataset.g&&setName(c.dataset.g))renderLS()};
+$('#new').onclick=function(){openEd(null)};
+$('#dclose').onclick=function(){dlg.close()};
+$('#dfmt').onclick=function(){try{$('#dval').value=JSON.stringify(JSON.parse($('#dval').value),null,2)}catch(e){toast('Không phải JSON hợp lệ')}};
+$('#dsave').onclick=function(){
+  var k=$('#dkey').value;if(!k)return toast('Cần nhập key');
+  try{
+    if(editing!==null&&editing!==k)localStorage.removeItem(editing);
+    localStorage.setItem(k,$('#dval').value);
+  }catch(e){return toast('Lưu thất bại (đầy bộ nhớ?)')}
+  dlg.close();render();toast('Đã lưu');
+};
+$('#ddel').onclick=function(){
+  if(!confirm('Xoá key "'+editing+'"?'))return;
+  localStorage.removeItem(editing);sel.delete(editing);dlg.close();render();toast('Đã xoá');
+};
+
+function tab(t){
+  $('#t-ls').classList.toggle('on',t==='ls');$('#t-idb').classList.toggle('on',t==='idb');
+  $('#p-ls').hidden=t!=='ls';$('#p-idb').hidden=t!=='idb';
+  if(t==='idb')loadIdb();
+}
+$('#t-ls').onclick=function(){tab('ls')};
+$('#t-idb').onclick=function(){tab('idb')};
+
+function loadIdb(){
+  var box=$('#idblist');
+  if(!indexedDB.databases){box.innerHTML='<div class="empty">Trình duyệt không hỗ trợ liệt kê IndexedDB.</div>';return}
+  indexedDB.databases().then(function(l){
+    box.innerHTML=l.length?l.map(function(d){
+      return '<div class="row" style="grid-template-columns:minmax(0,1fr) 70px 90px"><b>'+esc(d.name)+'</b><span class="sz">v'+d.version+'</span><button class="pk" data-db="'+esc(d.name)+'">Xoá</button></div>';
+    }).join(''):'<div class="empty">Chưa có database nào.</div>';
   });
-  const list=all.filter(([k,v])=>(!group||prefixOf(k)===group)&&(!q||k.toLowerCase().includes(q)||v.toLowerCase().includes(q)));
-  $('#rows').innerHTML=list.length?list.map(([k,v])=>`<tr>
-    <td><input type="checkbox" class="cb" data-k="${esc(k)}" ${selected.has(k)?'checked':''}></td>
-    <td class="n">${esc(nameOf(prefixOf(k)))}</td>
-    <td class="k">${esc(k)}</td><td class="v" title="${esc(v.slice(0,300))}">${esc(v.slice(0,120))}</td>
-    <td class="n">${fmtSize((k.length+v.length)*2)}</td>
-    <td class="acts"><button data-a="edit" data-k="${esc(k)}">Sửa</button> <button data-a="del" class="dg" data-k="${esc(k)}">Xoá</button></td></tr>`).join('')
-    :`<tr><td colspan="6" class="empty">Không có dữ liệu</td></tr>`;
-  const total=all.reduce((s,[k,v])=>s+(k.length+v.length)*2,0);
-  $('#sum').textContent=`${list.length}/${all.length} key hiển thị • tổng ~${fmtSize(total)} (giới hạn trình duyệt thường ~5–10 MB)`;
-  $('#rows').querySelectorAll('.cb').forEach(c=>c.onchange=()=>{c.checked?selected.add(c.dataset.k):selected.delete(c.dataset.k)});
-  $('#rows').querySelectorAll('button').forEach(b=>b.onclick=()=>{
-    const k=b.dataset.k;
-    if(b.dataset.a==='edit')openDlg(k,localStorage.getItem(k));
-    else if(confirm(`Xoá "${k}"?`)){localStorage.removeItem(k);selected.delete(k);renderLS()}
-  });
-  $('#all').checked=false;
 }
-$('#all').onchange=e=>{document.querySelectorAll('.cb').forEach(c=>{c.checked=e.target.checked;e.target.checked?selected.add(c.dataset.k):selected.delete(c.dataset.k)})};
-$('#q').oninput=renderLS;
-function openDlg(k,v){$('#dk').value=k||'';$('#dk').dataset.old=k||'';$('#dv').value=v||'';$('#dlg').showModal()}
-$('#add').onclick=()=>openDlg('','');
-$('#ren').onclick=()=>{if(!group)return toast('Bấm chọn một nhóm trước (hoặc bấm đúp vào nhóm)',1);if(setName(group))renderLS()};
-$('#dc').onclick=()=>$('#dlg').close();
-$('#fmt').onclick=()=>{try{$('#dv').value=JSON.stringify(JSON.parse($('#dv').value),null,2)}catch{toast('Không phải JSON hợp lệ',1)}};
-$('#ds').onclick=()=>{
-  const k=$('#dk').value,old=$('#dk').dataset.old;
-  if(!k)return toast('Cần nhập key',1);
-  try{if(old&&old!==k)localStorage.removeItem(old);localStorage.setItem(k,$('#dv').value)}catch(e){return toast('Lỗi: '+e.message,1)}
-  $('#dlg').close();renderLS();toast('Đã lưu');
-};
-$('#expAll').onclick=()=>{
-  const o={};lsEntries().forEach(([k,v])=>o[k]=v);
-  download(`save-localStorage-${stamp()}.json`,{type:'save-manager',version:1,names:NAMES,localStorage:o});
-};
-$('#expSel').onclick=()=>{
-  if(!selected.size)return toast('Chưa chọn key nào',1);
-  const o={};selected.forEach(k=>{const v=localStorage.getItem(k);if(v!==null)o[k]=v});
-  download(`save-selected-${stamp()}.json`,{type:'save-manager',version:1,localStorage:o});
-};
-$('#delSel').onclick=()=>{
-  if(!selected.size)return toast('Chưa chọn key nào',1);
-  if(!confirm(`Xoá ${selected.size} key đã chọn?`))return;
-  selected.forEach(k=>localStorage.removeItem(k));selected.clear();renderLS();
-};
-$('#imp').onclick=()=>$('#file').click();
-$('#idbImp').onclick=()=>$('#file').click();
-$('#file').onchange=async e=>{
-  const f=e.target.files[0];e.target.value='';if(!f)return;
-  try{
-    const d=JSON.parse(await f.text());
-    if(d.type!=='save-manager')throw new Error('Không phải file của Save Manager');
-    let msg=[];
-    if(d.names){Object.assign(NAMES,d.names);localStorage.setItem(NK,JSON.stringify(NAMES))}
-    if(d.localStorage){
-      const n=Object.keys(d.localStorage).length;
-      if(confirm(`Nhập ${n} key localStorage? Key trùng sẽ bị ghi đè.`)){
-        for(const k in d.localStorage)localStorage.setItem(k,d.localStorage[k]);msg.push(n+' key localStorage');
-      }
-    }
-    if(d.indexedDB&&d.indexedDB.length){
-      if(confirm(`Nhập ${d.indexedDB.length} database IndexedDB? Bản ghi trùng key sẽ bị ghi đè.`)){
-        for(const db of d.indexedDB)await importDb(db);msg.push(d.indexedDB.length+' IndexedDB');
-      }
-    }
-    renderLS();loadDbs();toast(msg.length?'Đã nhập: '+msg.join(', '):'Không nhập gì');
-  }catch(err){toast('Lỗi: '+err.message,1)}
+$('#idblist').onclick=function(e){
+  var n=e.target.dataset&&e.target.dataset.db;if(!n)return;
+  if(!confirm('Xoá database "'+n+'"? Không hoàn tác được.'))return;
+  var r=indexedDB.deleteDatabase(n);
+  r.onsuccess=function(){toast('Đã xoá');loadIdb()};
+  r.onblocked=function(){toast('Đang bị chặn: đóng các tab game đang mở');};
 };
 
-/* ---------- IndexedDB serialize ---------- */
-const b64=u8=>{let s='';for(let i=0;i<u8.length;i+=0x8000)s+=String.fromCharCode.apply(null,u8.subarray(i,i+0x8000));return btoa(s)};
-const unb64=s=>{const b=atob(s),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u};
-const TA={Int8Array,Uint8Array,Uint8ClampedArray,Int16Array,Uint16Array,Int32Array,Uint32Array,Float32Array,Float64Array,BigInt64Array,BigUint64Array};
-function enc(v){
-  if(v===null||typeof v!=='object')return typeof v==='bigint'?{__t:'bigint',v:String(v)}:v===undefined?{__t:'undef'}:(typeof v==='number'&&!isFinite(v))?{__t:'num',v:String(v)}:v;
-  if(v instanceof Date)return{__t:'date',v:v.getTime()};
-  if(v instanceof ArrayBuffer)return{__t:'ab',v:b64(new Uint8Array(v))};
-  if(ArrayBuffer.isView(v))return{__t:'ta',c:v.constructor.name,v:b64(new Uint8Array(v.buffer,v.byteOffset,v.byteLength))};
-  if(v instanceof Blob)throw new Error('Blob chưa được hỗ trợ');
-  if(Array.isArray(v))return v.map(enc);
-  const o={};for(const k in v)o[k]=enc(v[k]);
-  return(('__t' in o))?{__t:'esc',v:o}:o;
-}
-function dec(v){
-  if(v===null||typeof v!=='object')return v;
-  if(Array.isArray(v))return v.map(dec);
-  switch(v.__t){
-    case'date':return new Date(v.v);
-    case'bigint':return BigInt(v.v);
-    case'undef':return undefined;
-    case'num':return Number(v.v);
-    case'ab':return unb64(v.v).buffer;
-    case'ta':{const u=unb64(v.v);return new TA[v.c](u.buffer,0,u.byteLength/TA[v.c].BYTES_PER_ELEMENT)}
-    case'esc':v=v.v;
-  }
-  const o={};for(const k in v)o[k]=dec(v[k]);return o;
-}
-const req=r=>new Promise((res,rej)=>{r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
-const openDb=(name,ver,up)=>new Promise((res,rej)=>{
-  const r=ver?indexedDB.open(name,ver):indexedDB.open(name);
-  if(up)r.onupgradeneeded=()=>up(r.result);
-  r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);r.onblocked=()=>rej(new Error('Bị chặn: hãy đóng các tab game đang mở'));
-});
-
-async function dbInfo(name){
-  const db=await openDb(name);
-  try{
-    const stores=[...db.objectStoreNames];
-    const info=[];
-    if(stores.length){
-      const tx=db.transaction(stores,'readonly');
-      for(const s of stores){info.push({name:s,count:await req(tx.objectStore(s).count())})}
-    }
-    return{name,version:db.version,stores:info};
-  }finally{db.close()}
-}
-async function exportDb(name){
-  const db=await openDb(name);
-  try{
-    const out={name,version:db.version,stores:[]};
-    const names=[...db.objectStoreNames];
-    if(!names.length)return out;
-    const tx=db.transaction(names,'readonly');
-    for(const sn of names){
-      const st=tx.objectStore(sn);
-      const meta={name:sn,keyPath:st.keyPath,autoIncrement:st.autoIncrement,
-        indexes:[...st.indexNames].map(i=>{const x=st.index(i);return{name:i,keyPath:x.keyPath,unique:x.unique,multiEntry:x.multiEntry}}),records:[]};
-      await new Promise((res,rej)=>{
-        const c=st.openCursor();
-        c.onsuccess=()=>{const cur=c.result;if(!cur)return res();
-          try{meta.records.push({k:enc(cur.key),v:enc(cur.value)})}catch(e){return rej(e)}
-          cur.continue()};
-        c.onerror=()=>rej(c.error);
-      });
-      out.stores.push(meta);
-    }
-    return out;
-  }finally{db.close()}
-}
-async function importDb(d){
-  let db=await openDb(d.name);
-  const missing=d.stores.filter(s=>!db.objectStoreNames.contains(s.name));
-  if(missing.length){
-    const v=db.version+1;db.close();
-    db=await openDb(d.name,v,db2=>{
-      for(const s of missing){
-        const st=db2.createObjectStore(s.name,s.keyPath!=null?{keyPath:s.keyPath,autoIncrement:s.autoIncrement}:{autoIncrement:s.autoIncrement});
-        for(const i of s.indexes||[])st.createIndex(i.name,i.keyPath,{unique:i.unique,multiEntry:i.multiEntry});
-      }
-    });
-  }
-  try{
-    if(!d.stores.length)return;
-    const tx=db.transaction(d.stores.map(s=>s.name),'readwrite');
-    const done=new Promise((res,rej)=>{tx.oncomplete=res;tx.onerror=()=>rej(tx.error);tx.onabort=()=>rej(tx.error)});
-    for(const s of d.stores){
-      const st=tx.objectStore(s.name);
-      for(const r of s.records){
-        if(st.keyPath!=null)st.put(dec(r.v));else st.put(dec(r.v),dec(r.k));
-      }
-    }
-    await done;
-  }finally{db.close()}
-}
-
-async function loadDbs(){
-  const box=$('#dbs');
-  if(!indexedDB.databases){box.innerHTML='<div class="empty">Trình duyệt này không hỗ trợ liệt kê IndexedDB (Firefox cũ). Dùng Chrome/Edge/Safari mới.</div>';return}
-  box.innerHTML='<div class="empty">Đang tải...</div>';
-  try{
-    const list=(await indexedDB.databases()).filter(x=>x.name);
-    if(!list.length){box.innerHTML='<div class="empty">Chưa có IndexedDB nào</div>';return}
-    const infos=await Promise.all(list.map(x=>dbInfo(x.name).catch(e=>({name:x.name,err:e.message}))));
-    box.innerHTML=infos.map((d,i)=>`<div class="card"><h3>${nameOf('idb:'+d.name)?esc(nameOf('idb:'+d.name))+' <small style="color:var(--mut);font-weight:400">'+esc(d.name)+'</small>':esc(d.name)}</h3>
-      ${d.err?`<div class="st">Lỗi: ${esc(d.err)}</div>`:`<div class="st">version ${d.version} • ${d.stores.length} store</div>
-      ${d.stores.map(s=>`<div class="st">• ${esc(s.name)}: ${s.count} bản ghi</div>`).join('')}`}
-      <div class="bar" style="margin:8px 0 0"><button data-a="ren" data-i="${i}">✎ Đặt tên</button><button data-a="exp" data-i="${i}">Xuất</button><button class="dg" data-a="del" data-i="${i}">Xoá DB</button></div></div>`).join('');
-    box.querySelectorAll('button').forEach(b=>b.onclick=async()=>{
-      const name=infos[b.dataset.i].name;
-      try{
-        if(b.dataset.a==='ren'){if(setName('idb:'+name))loadDbs();return}
-        if(b.dataset.a==='exp'){download(`save-idb-${name.replace(/[^\w.-]+/g,'_')}-${stamp()}.json`,{type:'save-manager',version:1,indexedDB:[await exportDb(name)]});toast('Đã xuất')}
-        else if(confirm(`Xoá toàn bộ database "${name}"?`)){
-          await new Promise((res,rej)=>{const r=indexedDB.deleteDatabase(name);r.onsuccess=res;r.onerror=()=>rej(r.error);r.onblocked=()=>rej(new Error('Bị chặn: đóng các tab game đang mở'))});
-          toast('Đã xoá');loadDbs();
-        }
-      }catch(e){toast('Lỗi: '+e.message,1)}
-    });
-    box._infos=infos;
-  }catch(e){box.innerHTML=`<div class="empty">Lỗi: ${esc(e.message)}</div>`}
-}
-$('#idbRef').onclick=loadDbs;
-$('#idbExpAll').onclick=async()=>{
-  try{
-    const list=(await indexedDB.databases()).filter(x=>x.name);
-    if(!list.length)return toast('Không có DB nào',1);
-    const arr=[];for(const x of list)arr.push(await exportDb(x.name));
-    download(`save-idb-all-${stamp()}.json`,{type:'save-manager',version:1,indexedDB:arr});toast('Đã xuất');
-  }catch(e){toast('Lỗi: '+e.message,1)}
-};
-
-renderLS();
-/* tuỳ chọn: đặt file games.json cạnh trang này để tự có sẵn tên game.
-   Ví dụ: {"rpg":"Game RPG","snake":"Rắn săn mồi","idb:/idbfs/abc123":"Game Unity"} */
-fetch('games.json',{cache:'no-store'}).then(r=>r.ok?r.json():{}).catch(()=>({})).then(j=>{FILE_NAMES=j||{};renderLS()});
+render();
+})();
 </script>
 </body>
 </html>
